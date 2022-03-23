@@ -1,7 +1,14 @@
 <template>
-  <div class="datepicker-view datepicker-grid months w-64 grid grid-cols-4">
+  <div class="
+    datepicker-view
+    datepicker-grid
+    years-of-twelfth
+    w-64
+    grid
+    grid-cols-4
+  ">
     <span
-      v-for="(month, index) in months"
+      v-for="(year, index) in years"
       :key="index"
       class="
         datepicker-cell
@@ -18,11 +25,11 @@
         text-gray-900
       "
       :class="[
-        { 'bg-gray-200': isSameMonth(cursor, month.date) },
-        { '!bg-blue-700 !text-white': isSameMonth(modelValue, month.date) },
+        { 'bg-gray-200': isSameYear(cursor, year.date) },
+        { '!bg-blue-700 !text-white': isSameYear(modelValue, year.date) },
       ]"
-      @click="onMonthClick(month)"
-    >{{ month.formatted }}</span>
+      @click="onYearClick(year)"
+    >{{ year.formatted }}</span>
   </div>
 </template>
 
@@ -30,8 +37,8 @@
 import {
   computed, defineProps, toRefs, getCurrentInstance,
 } from 'vue';
-import { isSameMonth } from 'date-fns';
-import { getMonthsOfYear } from '../../utils/date';
+import { isSameYear } from 'date-fns';
+import { getYearsOfTwelfth } from '../../utils/date';
 
 const props = defineProps({
   cursor: {
@@ -45,8 +52,8 @@ const props = defineProps({
 });
 const { cursor, modelValue } = toRefs(props);
 const { emit } = getCurrentInstance();
-const months = computed(() => getMonthsOfYear(cursor.value));
-const onMonthClick = (month) => {
-  emit('update', { cursor: month.date });
+const years = computed(() => getYearsOfTwelfth(cursor.value));
+const onYearClick = (year) => {
+  emit('update', { cursor: year.date });
 };
 </script>

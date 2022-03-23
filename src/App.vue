@@ -1,5 +1,5 @@
 <template>
-  <div class="flex items-center justify-center w-full h-screen">
+  <div class="flex items-center justify-center w-full h-screen bg-gray-50">
     <Picker />
   </div>
 </template>

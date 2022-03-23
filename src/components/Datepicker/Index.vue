@@ -89,12 +89,9 @@
 
 <script setup>
 import {
-  defineProps, toRefs, computed, ref, shallowRef,
+  defineProps, toRefs, computed, ref,
 } from 'vue';
-import { addMonths, startOfMonth, subMonths } from 'date-fns';
-import { formatMonth, formatYear } from '../../utils/date';
-import DaysOfMonth from './DaysOfMonth.vue';
-import MonthsOfYear from './MonthsOfYear.vue';
+import { modes } from '.';
 import ArrowLeft from '../icons/ArrowLeft.vue';
 import ArrowRight from '../icons/ArrowRight.vue';
 
@@ -103,36 +100,22 @@ const props = defineProps({
     type: Boolean,
     default: false,
   },
+  buttons: {
+    type: Boolean,
+    default: false,
+  },
+  format: {
+    type: String,
+    default: 'mm/dd/yyyy',
+  },
+  title: {
+    type: String,
+    default: '',
+  },
 });
-const { autohide } = toRefs(props);
-
-const modes = [
-  {
-    name: 'DaysOfMonth',
-    view: shallowRef(DaysOfMonth),
-    header: (date) => `${formatMonth(date)} ${formatYear(date)}`,
-    prevAction: (date) => subMonths(startOfMonth(date), 1),
-    nextAction: (date) => addMonths(startOfMonth(date), 1),
-    isDefault: true,
-    comebackMode: () => modes[0],
-  },
-  {
-    name: 'MonthsOfYear',
-    view: shallowRef(MonthsOfYear),
-    header: (date) => `${formatMonth(date)}`,
-    comebackMode: () => modes[0],
-  },
-  {
-    name: 'YearsOfTwelfth',
-    view: null,
-    comebackMode: () => modes[1],
-  },
-  {
-    name: 'YearsOfCentury',
-    view: null,
-    comebackMode: () => modes[2],
-  },
-];
+const {
+  autohide, buttons, format, title,
+} = toRefs(props);
 
 const selectedMode = ref(modes.find((mode) => mode?.isDefault));
 const selectedDate = ref(new Date());

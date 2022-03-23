@@ -13,8 +13,8 @@
           font-medium
           text-gray-500
         "
-        :class="{ 'text-red-500': index === 0 || index === 6 }"
-      >{{ weekDay }}</span>
+        :class="{ 'text-red-500': weekDay.isWeekend }"
+      >{{ weekDay.formatted }}</span>
     </div>
     <div class="datepicker-grid w-64 grid grid-cols-7 mt-1">
       <span
