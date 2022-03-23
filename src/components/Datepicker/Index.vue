@@ -2,9 +2,9 @@
   <div class="datepicker-picker inline-block rounded-lg bg-white shadow-lg p-4">
     <div class="datepicker-header">
       <div
-        v-show="showTitle"
+        v-show="options?.title"
         class="datepicker-title bg-white px-2 py-3 text-center font-semibold"
-      ></div>
+      >{{ options?.title }}</div>
       <div class="datepicker-controls flex justify-between">
         <button
           type="button"
@@ -41,7 +41,7 @@
             focus:ring-gray-200
           "
           @click="switchMode"
-        >{{ viewSwitchContent }}</button>
+        >{{ selectedMode?.header(cursorDate) }}</button>
         <button
           type="button"
           class="
@@ -67,20 +67,55 @@
         <component
           :is="selectedMode.view"
           :cursor="cursorDate"
-          :modelValue="selectedDate"
+          :modelValue="modelValue"
           @update="onUpdate"
         />
       </keep-alive>
     </div>
     <div class="datepicker-footer">
-      <div v-show="showFooterControls" class="datepicker-controls flex space-x-2 mt-2">
+      <div
+        v-show="options?.buttons"
+        class="datepicker-controls flex space-x-2 mt-2"
+      >
         <button
           type="button"
-          class="today-btn text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2"
+          class="
+            today-btn
+            text-white
+            bg-blue-700
+            hover:bg-blue-800
+            focus:ring-4
+            focus:ring-blue-300
+            font-medium
+            rounded-lg
+            text-sm
+            px-5
+            py-2
+            text-center
+            w-1/2
+          "
+          @click="onTodayClick"
         >{{ todayControlsButton }}</button>
         <button
           type="button"
-          class="clear-btn text-gray-900 bg-white border border-gray-300 hover:bg-gray-100 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2 text-center w-1/2"
+          class="
+            clear-btn
+            text-gray-900
+            bg-white
+            border
+            border-gray-300
+            hover:bg-gray-100
+            focus:ring-4
+            focus:ring-blue-300
+            font-medium
+            rounded-lg
+            text-sm
+            px-5
+            py-2
+            text-center
+            w-1/2
+          "
+          @click="onClearClick"
         >{{ clearControlsButton }}</button>
       </div>
     </div>
@@ -89,48 +124,36 @@
 
 <script setup>
 import {
-  defineProps, toRefs, computed, ref,
+  defineProps, toRefs, computed, ref, getCurrentInstance,
 } from 'vue';
 import { modes } from '.';
 import ArrowLeft from '../icons/ArrowLeft.vue';
 import ArrowRight from '../icons/ArrowRight.vue';
 
 const props = defineProps({
-  autohide: {
-    type: Boolean,
-    default: false,
+  options: {
+    type: Object,
+    default: () => ({
+      autohide: false,
+      buttons: false,
+      format: 'mm/dd/yyyy',
+      title: '',
+      locale: 'en-US',
+    }),
   },
-  buttons: {
-    type: Boolean,
-    default: false,
-  },
-  format: {
-    type: String,
-    default: 'mm/dd/yyyy',
-  },
-  title: {
-    type: String,
-    default: '',
+  modelValue: {
+    type: Date,
+    default: new Date(),
   },
 });
-const {
-  autohide, buttons, format, title,
-} = toRefs(props);
+const { options, modelValue } = toRefs(props);
+const { emit } = getCurrentInstance();
 
 const selectedMode = ref(modes.find((mode) => mode?.isDefault));
-const selectedDate = ref(new Date());
 const cursorDate = ref(new Date());
-
-const viewSwitchContent = computed(() => {
-  const date = cursorDate.value;
-  return selectedMode.value?.header(date);
-});
 
 const todayControlsButton = computed(() => 'Today');
 const clearControlsButton = computed(() => 'Clear');
-
-const showTitle = computed(() => false);
-const showFooterControls = computed(() => false);
 
 const switchMode = () => {
   const modeName = selectedMode.value?.name;
@@ -142,10 +165,20 @@ const switchMode = () => {
 };
 const onUpdate = (payload) => {
   const updatedValue = payload?.value;
-  if (updatedValue) selectedDate.value = updatedValue;
   const updatedCursor = payload?.cursor;
+  if (updatedValue || updatedValue === null) {
+    emit('update:modelValue', updatedValue);
+  }
   if (updatedCursor) cursorDate.value = updatedCursor;
   else cursorDate.value = updatedValue;
   selectedMode.value = selectedMode.value?.comebackMode();
+};
+const onTodayClick = () => {
+  const today = new Date();
+  onUpdate({ value: today, cursor: today });
+};
+const onClearClick = () => {
+  const today = new Date();
+  onUpdate({ value: null, cursor: today });
 };
 </script>

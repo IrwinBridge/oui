@@ -95,9 +95,9 @@ export const getWeekDays = (options) => {
     }));
 };
 
-export const getDaysForMonth = (options) => {
+export const getDaysForMonth = (cursorDate, options) => {
   const locale = getLocale(options);
-  const month = options?.monthDate || new Date();
+  const month = cursorDate || new Date();
   const thisMonthStart = startOfMonth(month);
   const thisMonthEnd = endOfMonth(month);
   const prevMonthDays = buildPrevMonthDays(thisMonthStart);

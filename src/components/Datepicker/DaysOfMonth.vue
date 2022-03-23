@@ -50,7 +50,9 @@
 import {
   ref, computed, defineProps, toRefs, getCurrentInstance,
 } from 'vue';
-import { isSameDay, isSameMonth, isSameYear } from 'date-fns';
+import {
+  isSameDay, isSameMonth, isSameYear, isDate,
+} from 'date-fns';
 import { getWeekDays, getDaysForMonth } from '../../utils/date';
 
 const props = defineProps({
@@ -67,10 +69,9 @@ const { cursor, modelValue } = toRefs(props);
 const { emit } = getCurrentInstance();
 
 const weekDays = ref(getWeekDays());
-const days = computed(() => getDaysForMonth({
-  monthDate: cursor.value,
-}));
+const days = computed(() => getDaysForMonth(cursor.value));
 const isSameDate = (left, right) => {
+  if (!isDate(left) || !isDate(right)) return false;
   const sameDay = isSameDay(left, right);
   const sameMonth = isSameMonth(left, right);
   const sameYear = isSameYear(left, right);
