@@ -9,6 +9,9 @@ import {
   differenceInCalendarDays,
   subDays,
   addDays,
+  startOfYear,
+  endOfYear,
+  eachMonthOfInterval,
 } from 'date-fns';
 import deafultLocale from 'date-fns/locale/en-US';
 
@@ -23,6 +26,18 @@ export const getWeekDays = (options) => {
   const end = endOfWeek(now, { locale });
   return eachDayOfInterval({ start, end })
     .map((day) => format(day, 'EEEEEE', { locale }));
+};
+
+export const getMonthsOfYear = (options) => {
+  const locale = getLocale(options);
+  const now = new Date();
+  const start = startOfYear(now, { locale });
+  const end = endOfYear(now, { locale });
+  return eachMonthOfInterval({ start, end })
+    .map((month) => ({
+      formatted: format(month, 'MMM', { locale }),
+      date: month,
+    }));
 };
 
 const buildPrevMonthDays = (thisMonthStart, locale) => {

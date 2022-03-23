@@ -38,8 +38,9 @@
           { 'text-gray-400': day.color === 'businessday-inactive' },
           { 'text-red-500': day.color === 'weekend-active' },
           { 'text-red-300': day.color === 'weekend-inactive' },
-          { 'bg-gray-200': isSameDay(day.date, todaysDate) },
+          { '!bg-blue-700 !text-white': isSameDate(day.date, modelValue) },
         ]"
+        @click="onDateSelect(day)"
       >{{ day.formatted }}</span>
     </div>
   </div>
@@ -47,22 +48,35 @@
 
 <script setup>
 import {
-  ref, computed, defineProps, toRefs,
+  ref, computed, defineProps, toRefs, getCurrentInstance,
 } from 'vue';
-import { isSameDay } from 'date-fns';
+import { isSameDay, isSameMonth, isSameYear } from 'date-fns';
 import { getWeekDays, getDaysForMonth } from '../../utils/date';
 
 const props = defineProps({
+  cursor: {
+    type: Date,
+    default: new Date(),
+  },
   modelValue: {
     type: Date,
     default: new Date(),
   },
 });
-const { modelValue } = toRefs(props);
+const { cursor, modelValue } = toRefs(props);
+const { emit } = getCurrentInstance();
 
-const todaysDate = ref(new Date());
 const weekDays = ref(getWeekDays());
 const days = computed(() => getDaysForMonth({
-  monthDate: modelValue.value,
+  monthDate: cursor.value,
 }));
+const isSameDate = (left, right) => {
+  const sameDay = isSameDay(left, right);
+  const sameMonth = isSameMonth(left, right);
+  const sameYear = isSameYear(left, right);
+  return sameDay && sameMonth && sameYear;
+};
+const onDateSelect = (day) => {
+  emit('update', { value: day.date });
+};
 </script>

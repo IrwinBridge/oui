@@ -20,7 +20,7 @@
             focus:ring-2
             focus:ring-gray-200
           "
-          @click="onPrevAction"
+          @click="cursorDate = selectedMode?.prevAction(cursorDate)"
         >
           <ArrowLeft class="w-4 h-4" />
         </button>
@@ -40,6 +40,7 @@
             focus:ring-2
             focus:ring-gray-200
           "
+          @click="switchMode"
         >{{ viewSwitchContent }}</button>
         <button
           type="button"
@@ -55,15 +56,21 @@
             focus:ring-2
             focus:ring-gray-200
           "
-          @click="onNextAction"
+          @click="cursorDate = selectedMode?.nextAction(cursorDate)"
         >
           <ArrowRight class="w-4 h-4" />
         </button>
       </div>
     </div>
     <div class="datepicker-main p-1">
-      <!-- will switch this component -->
-      <DaysView v-model="selectedDate" />
+      <keep-alive>
+        <component
+          :is="selectedMode.view"
+          :cursor="cursorDate"
+          :modelValue="selectedDate"
+          @update="onUpdate"
+        />
+      </keep-alive>
     </div>
     <div class="datepicker-footer">
       <div v-show="showFooterControls" class="datepicker-controls flex space-x-2 mt-2">
@@ -81,40 +88,81 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue';
+import {
+  defineProps, toRefs, computed, ref, shallowRef,
+} from 'vue';
 import { addMonths, startOfMonth, subMonths } from 'date-fns';
 import { formatMonth, formatYear } from '../../utils/date';
-import DaysView from './PickerDaysView.vue';
+import DaysOfMonth from './DaysOfMonth.vue';
+import MonthsOfYear from './MonthsOfYear.vue';
 import ArrowLeft from '../icons/ArrowLeft.vue';
 import ArrowRight from '../icons/ArrowRight.vue';
 
-// To be refactored
-const MODE_DAYS_OF_MONTH = 'daysOfMonth';
-const MODE_MONTHS_OF_YEAR = 'monthsOfYear';
-const MODE_YEARS = 'years';
-const MODES = [MODE_DAYS_OF_MONTH, MODE_MONTHS_OF_YEAR, MODE_YEARS];
-const mode = ref(MODE_DAYS_OF_MONTH);
+const props = defineProps({
+  autohide: {
+    type: Boolean,
+    default: false,
+  },
+});
+const { autohide } = toRefs(props);
 
+const modes = [
+  {
+    name: 'DaysOfMonth',
+    view: shallowRef(DaysOfMonth),
+    header: (date) => `${formatMonth(date)} ${formatYear(date)}`,
+    prevAction: (date) => subMonths(startOfMonth(date), 1),
+    nextAction: (date) => addMonths(startOfMonth(date), 1),
+    isDefault: true,
+    comebackMode: () => modes[0],
+  },
+  {
+    name: 'MonthsOfYear',
+    view: shallowRef(MonthsOfYear),
+    header: (date) => `${formatMonth(date)}`,
+    comebackMode: () => modes[0],
+  },
+  {
+    name: 'YearsOfTwelfth',
+    view: null,
+    comebackMode: () => modes[1],
+  },
+  {
+    name: 'YearsOfCentury',
+    view: null,
+    comebackMode: () => modes[2],
+  },
+];
+
+const selectedMode = ref(modes.find((mode) => mode?.isDefault));
 const selectedDate = ref(new Date());
+const cursorDate = ref(new Date());
 
-const viewSwitchContent = computed(() => `${
-  formatMonth(selectedDate.value)
-} ${
-  formatYear(selectedDate.value)
-}`);
+const viewSwitchContent = computed(() => {
+  const date = cursorDate.value;
+  return selectedMode.value?.header(date);
+});
+
 const todayControlsButton = computed(() => 'Today');
 const clearControlsButton = computed(() => 'Clear');
+
 const showTitle = computed(() => false);
 const showFooterControls = computed(() => false);
 
-const onPrevAction = () => {
-  if (mode.value === MODE_DAYS_OF_MONTH) {
-    selectedDate.value = subMonths(startOfMonth(selectedDate.value), 1);
-  }
+const switchMode = () => {
+  const modeName = selectedMode.value?.name;
+  const nextModeIndex = modes.findIndex((mode) => mode.name === modeName) + 1;
+  const isLastMode = nextModeIndex >= modes.length;
+  selectedMode.value = isLastMode
+    ? modes[nextModeIndex - 1]
+    : modes[nextModeIndex];
 };
-const onNextAction = () => {
-  if (mode.value === MODE_DAYS_OF_MONTH) {
-    selectedDate.value = addMonths(startOfMonth(selectedDate.value), 1);
-  }
+const onUpdate = (payload) => {
+  const updatedValue = payload?.value;
+  if (updatedValue) selectedDate.value = updatedValue;
+  const updatedCursor = payload?.cursor;
+  if (updatedCursor) cursorDate.value = updatedCursor;
+  else cursorDate.value = updatedValue;
+  selectedMode.value = selectedMode.value?.comebackMode();
 };
 </script>
