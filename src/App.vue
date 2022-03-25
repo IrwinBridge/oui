@@ -9,7 +9,7 @@
       justify-center
     bg-gray-50
     "
-    style="height: 200vh"
+    style="height: 160vh"
     >
     <Datepicker v-bind="datepickerOptions" v-model="deadline" />
   </div>
