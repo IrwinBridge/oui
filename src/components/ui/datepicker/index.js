@@ -5,20 +5,20 @@ import {
 } from 'date-fns';
 import {
   formatMonth, formatYear, formatTwelfYearsRange, formatCenturyRange,
-} from '../../utils/date';
+} from '../../../utils/date';
 import DaysOfMonth from './DaysOfMonth.vue';
 import MonthsOfYear from './MonthsOfYear.vue';
 import YearsOfTwelfth from './YearsOfTwelfth.vue';
 import DecadesOfCentury from './DecadesOfCentury.vue';
 
-export const modes = [
+export const allModes = [
   {
     name: 'DaysOfMonth',
     view: shallowRef(DaysOfMonth),
     header: (date) => `${formatMonth(date)} ${formatYear(date)}`,
     prevAction: (date) => subMonths(startOfMonth(date), 1),
     nextAction: (date) => addMonths(startOfMonth(date), 1),
-    comebackMode: () => modes[0],
+    comebackMode: () => allModes[0],
     isDefault: true,
   },
   {
@@ -27,7 +27,7 @@ export const modes = [
     header: (date) => `${formatYear(date)}`,
     prevAction: (date) => subYears(startOfMonth(date), 1),
     nextAction: (date) => addYears(startOfMonth(date), 1),
-    comebackMode: () => modes[0],
+    comebackMode: () => allModes[0],
   },
   {
     name: 'YearsOfTwelfth',
@@ -35,7 +35,7 @@ export const modes = [
     header: (date) => `${formatTwelfYearsRange(date)}`,
     prevAction: (date) => subYears(startOfMonth(date), 10),
     nextAction: (date) => addYears(startOfMonth(date), 10),
-    comebackMode: () => modes[1],
+    comebackMode: () => allModes[1],
   },
   {
     name: 'YearsOfCentury',
@@ -43,6 +43,6 @@ export const modes = [
     header: (date) => `${formatCenturyRange(date)}`,
     prevAction: (date) => subYears(startOfMonth(date), 100),
     nextAction: (date) => addYears(startOfMonth(date), 100),
-    comebackMode: () => modes[2],
+    comebackMode: () => allModes[2],
   },
 ];

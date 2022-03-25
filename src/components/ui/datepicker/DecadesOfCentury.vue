@@ -34,10 +34,8 @@
 </template>
 
 <script setup>
-import {
-  computed, defineProps, toRefs, getCurrentInstance,
-} from 'vue';
-import { getDecadesOfCentury, isWithinDecade } from '../../utils/date';
+import { computed, toRefs, getCurrentInstance } from 'vue';
+import { getDecadesOfCentury, isWithinDecade } from '../../../utils/date';
 
 const props = defineProps({
   cursor: {

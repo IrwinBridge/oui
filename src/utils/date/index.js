@@ -22,7 +22,8 @@ import {
   lastDayOfDecade,
   isWithinInterval,
 } from 'date-fns';
-import deafultLocale from 'date-fns/locale/en-US';
+import * as Locales from 'date-fns/locale';
+import { capitalize } from '../string';
 
 const NUMBER_OF_WEEKS = 6;
 
@@ -82,7 +83,14 @@ export const isWithinDecade = (date, decadeDate) => {
   return isWithinInterval(date, { start, end });
 };
 
-export const getLocale = (options) => options?.locale || deafultLocale;
+export const getLocale = () => {
+  const locale = window.ouidatepicker.localeId;
+  const localeObjectName = locale.replace('-', '');
+  const fallbackObjectName = locale.split('-')[0];
+  return Locales[localeObjectName]
+    ?? Locales[fallbackObjectName]
+    ?? Locales.enUS;
+};
 export const getWeekDays = (options) => {
   const locale = getLocale(options);
   const now = new Date();
@@ -97,7 +105,7 @@ export const getWeekDays = (options) => {
 
 export const getDaysForMonth = (cursorDate, options) => {
   const locale = getLocale(options);
-  const month = cursorDate || new Date();
+  const month = cursorDate ?? new Date();
   const thisMonthStart = startOfMonth(month);
   const thisMonthEnd = endOfMonth(month);
   const prevMonthDays = buildPrevMonthDays(thisMonthStart);
@@ -118,7 +126,7 @@ export const getMonthsOfYear = (cursorDate, options) => {
   const end = endOfYear(cursorDate);
   return eachMonthOfInterval({ start, end })
     .map((month) => ({
-      formatted: format(month, 'MMM', { locale }),
+      formatted: capitalize(format(month, 'LLL', { locale })),
       date: month,
     }));
 };
@@ -145,7 +153,7 @@ export const getDecadesOfCentury = (cursorDate, options) => {
 
 export const formatMonth = (monthDate, options) => {
   const locale = getLocale(options);
-  return format(monthDate, 'MMMM', { locale });
+  return capitalize(format(monthDate, 'LLLL', { locale }));
 };
 export const formatYear = (yearDate, options) => {
   const locale = getLocale(options);
@@ -164,4 +172,9 @@ export const formatCenturyRange = (cursorDate, options) => {
   const startYear = format(years[1]?.date, 'y', { locale });
   const endYear = format(years[10]?.date, 'y', { locale });
   return `${startYear} - ${endYear}`;
+};
+export const formatInputDate = (date, mask) => {
+  const locale = getLocale();
+  if (date === null) return '';
+  return format(date, mask, { locale });
 };

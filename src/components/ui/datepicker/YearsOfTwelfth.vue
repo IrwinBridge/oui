@@ -34,11 +34,9 @@
 </template>
 
 <script setup>
-import {
-  computed, defineProps, toRefs, getCurrentInstance,
-} from 'vue';
+import { computed, toRefs, getCurrentInstance } from 'vue';
 import { isSameYear } from 'date-fns';
-import { getYearsOfTwelfth } from '../../utils/date';
+import { getYearsOfTwelfth } from '../../../utils/date';
 
 const props = defineProps({
   cursor: {

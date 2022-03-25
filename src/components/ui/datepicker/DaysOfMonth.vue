@@ -48,12 +48,12 @@
 
 <script setup>
 import {
-  ref, computed, defineProps, toRefs, getCurrentInstance,
+  ref, computed, toRefs, getCurrentInstance,
 } from 'vue';
 import {
   isSameDay, isSameMonth, isSameYear, isDate,
 } from 'date-fns';
-import { getWeekDays, getDaysForMonth } from '../../utils/date';
+import { getWeekDays, getDaysForMonth } from '../../../utils/date';
 
 const props = defineProps({
   cursor: {

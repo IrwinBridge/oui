@@ -27,11 +27,9 @@
 </template>
 
 <script setup>
-import {
-  computed, defineProps, toRefs, getCurrentInstance,
-} from 'vue';
+import { computed, toRefs, getCurrentInstance } from 'vue';
 import { isSameMonth } from 'date-fns';
-import { getMonthsOfYear } from '../../utils/date';
+import { getMonthsOfYear } from '../../../utils/date';
 
 const props = defineProps({
   cursor: {
