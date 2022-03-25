@@ -7,15 +7,13 @@
 - [ ] Customization of sizes
 - [x] Customization of available modes
 - [x] Add locales
-- [x] Options
-  - [x] inline
-  - [x] autohide
-  - [x] buttons
-    - [x] today
-    - [x] clear
-  - [x] format
-  - [x] title
-  - [x] locale
+- [x] Option: inline
+- [x] Option: autohide
+- [x] Option: buttons -> today
+- [x] Option: buttons -> clear
+- [x] Option: format
+- [x] Option: title
+- [x] Option: locale
 - [ ] I18n of texts
 - [x] Mobile version
 - [ ] Dark theme
