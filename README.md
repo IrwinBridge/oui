@@ -15,6 +15,7 @@
 - [x] Option: title
 - [x] Option: locale
 - [ ] I18n of texts
+- [ ] A11y
 - [x] Mobile version
 - [ ] Dark theme
 - [ ] Storybook
