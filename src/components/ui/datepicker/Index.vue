@@ -118,7 +118,7 @@
               w-1/2
             "
             @click="onTodayClick"
-          >{{ todayControlsButton }}</button>
+          >{{ t('button.today') }}</button>
           <button
             type="button"
             class="
@@ -139,7 +139,7 @@
               w-1/2
             "
             @click="onClearClick"
-          >{{ clearControlsButton }}</button>
+          >{{ t('button.clear') }}</button>
         </div>
       </div>
     </div>
@@ -152,8 +152,11 @@ import {
 } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { toDate, isValid } from 'date-fns';
+import { useI18n } from 'vue-i18n';
+import messages from './locales';
 import { formatInputDate } from '../../../utils/date';
 import { positionDropdown } from '../../../utils/window';
+import { getLocale } from '../../../utils/i18n';
 import { allModes } from '.';
 import ArrowLeft from '../../icons/ArrowLeft.vue';
 import ArrowRight from '../../icons/ArrowRight.vue';
@@ -197,11 +200,18 @@ const props = defineProps({
 const {
   inline, autohide, buttons, mask, title, locale, availableModes, modelValue,
 } = toRefs(props);
+const t = ref(null);
 
 onBeforeMount(() => {
   window.ouidatepicker = {
     localeId: locale.value ?? navigator.language,
   };
+  const composer = useI18n({
+    inheritLocale: false,
+    locale: getLocale(),
+    messages,
+  });
+  t.value = composer.t;
 });
 
 const datepickerContainer = ref(null);
@@ -224,10 +234,6 @@ const showPicker = computed(() => inline.value || isPickerVisible.value);
 onClickOutside(datepickerContainer, () => {
   isPickerVisible.value = false;
 });
-
-// TODO: replace with i18n
-const todayControlsButton = computed(() => 'Today');
-const clearControlsButton = computed(() => 'Clear');
 
 const switchMode = () => {
   const modeName = selectedMode.value?.name;

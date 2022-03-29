@@ -30,11 +30,11 @@ const datepickerOptions = ref({
   // If you need today and clear buttons to show up
   buttons: true,
   // If you want picker to close on date pick
-  autohide: true,
+  autohide: false,
   // Available modes:
   // DaysOfMonth, MonthsOfYear, YearsOfTwelfth, YearsOfCentury
   // DaysOfMonth is a default mode and cannot be ommited
-  availableModes: ['DaysOfMonth', 'MonthsOfYear', 'YearsOfTwelfth'],
+  // availableModes: ['DaysOfMonth', 'MonthsOfYear', 'YearsOfTwelfth'],
   // default locale is your current browser locale
   // fallback locale is en-US
   // locale: 'en-US',
