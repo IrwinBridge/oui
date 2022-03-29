@@ -14,7 +14,12 @@
 - [x] Option: format
 - [x] Option: title
 - [x] Option: locale
-- [ ] I18n of texts
+- [x] Option: availableModes
+- [x] I18n of button texts for EN
+- [x] I18n of button texts for RU
+- [ ] I18n of button texts for FR
+- [ ] I18n of button texts for CH
+- [ ] I18n of button texts for JA
 - [ ] A11y
 - [x] Mobile version
 - [ ] Dark theme
