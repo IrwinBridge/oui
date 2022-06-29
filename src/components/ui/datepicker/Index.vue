@@ -10,25 +10,16 @@
     </VInput>
     <div
       v-show="showPicker"
-      class="
-        datepicker-picker
-        absolute
-        left-0
-        inline-block
-        rounded-lg
-        bg-white
-        shadow-lg
-        p-4
-      "
+      class="absolute left-0 inline-block p-4 bg-white rounded-lg shadow-lg datepicker-picker"
       :class="{ 'relative': inline }"
       :style="pickerPositionStyle"
     >
       <div class="datepicker-header">
         <div
           v-show="title"
-          class="datepicker-title bg-white px-2 py-3 text-center font-semibold"
+          class="px-2 py-3 font-semibold text-center bg-white datepicker-title"
         >{{ title }}</div>
-        <div class="datepicker-controls flex justify-between">
+        <div class="flex justify-between datepicker-controls">
           <button
             type="button"
             class="
@@ -85,7 +76,7 @@
           </button>
         </div>
       </div>
-      <div class="datepicker-main p-1">
+      <div class="p-1 datepicker-main">
         <keep-alive>
           <component
             :is="selectedMode.view"
@@ -98,46 +89,16 @@
       <div class="datepicker-footer">
         <div
           v-show="buttons"
-          class="datepicker-controls flex space-x-2 mt-2"
+          class="flex mt-2 space-x-2 datepicker-controls"
         >
           <button
             type="button"
-            class="
-              today-btn
-              text-white
-              bg-blue-700
-              hover:bg-blue-800
-              focus:ring-4
-              focus:ring-blue-300
-              font-medium
-              rounded-lg
-              text-sm
-              px-5
-              py-2
-              text-center
-              w-1/2
-            "
+            class="w-1/2 px-5 py-2 text-sm font-medium text-center text-white bg-blue-700 rounded-lg today-btn hover:bg-blue-800 focus:ring-4 focus:ring-blue-300"
             @click="onTodayClick"
           >{{ t('button.today') }}</button>
           <button
             type="button"
-            class="
-              clear-btn
-              text-gray-900
-              bg-white
-              border
-              border-gray-300
-              hover:bg-gray-100
-              focus:ring-4
-              focus:ring-blue-300
-              font-medium
-              rounded-lg
-              text-sm
-              px-5
-              py-2
-              text-center
-              w-1/2
-            "
+            class="w-1/2 px-5 py-2 text-sm font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg clear-btn hover:bg-gray-100 focus:ring-4 focus:ring-blue-300"
             @click="onClearClick"
           >{{ t('button.clear') }}</button>
         </div>
@@ -289,4 +250,10 @@ const inputDate = computed({
     }
   },
 });
+</script>
+
+<script>
+export default {
+  name: 'Datepicker',
+};
 </script>
