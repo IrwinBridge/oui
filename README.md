@@ -26,4 +26,4 @@
 - [ ] Storybook
 - [ ] Documentation
 - [ ] Tests coverage (from documentation)
-- [ ] NPM packet with tree shaking
+- [x] NPM packet with tree shaking
